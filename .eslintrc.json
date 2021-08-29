@@ -1,0 +1,40 @@
+{
+	"env": {
+		"es6": true,
+		"node": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "script",
+        "ecmaFeatures": {}
+	},
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"rules": {
+		"no-console": 0,
+		"no-unused-vars": "error",
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"@typescript-eslint/no-use-before-define": "error",
+		"@typescript-eslint/no-unused-vars": [
+			"error",
+			{
+				"argsIgnorePattern": "^_"
+			}
+		],
+		"@typescript-eslint/no-empty-function": "error"
+	}
+}
