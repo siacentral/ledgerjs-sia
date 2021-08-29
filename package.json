@@ -1,6 +1,6 @@
 {
 	"name": "@siacentral/ledgerjs-sia",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Ledger hardware wallet Siacoin API.",
 	"main": "lib/sia.js",
 	"types": "lib/sia.d.ts",
