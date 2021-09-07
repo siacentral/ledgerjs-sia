@@ -1,5 +1,4 @@
 import type Transport from "@ledgerhq/hw-transport";
-import { decode } from '@stablelib/utf8';
 import { Buffer } from 'buffer';
 import { encode } from '@stablelib/base64';
 
@@ -9,9 +8,14 @@ function uint32ToBuffer(val: number): Buffer {
 	return buf;
 }
 
+interface VerifyResponse {
+	address: string;
+	publicKey: string;
+}
+
 /**
  * Sia
- * 
+ *
  * @example
  * import Sia from '@siacentral/ledgerjs-sia';
  * const sia = new Sia(transport)
@@ -22,16 +26,16 @@ export default class Sia {
 	constructor(transport: Transport, scrambleKey = 'Sia') {
 		this.transport = transport;
 		transport.decorateAppAPIMethods(this, [
-			'getPublicKey',
-			'getStandardAddress',
 			'signTransactionV044',
-			'signTransaction'
+			'signTransaction',
+			'verifyPublicKey',
+			'verifyStandardAddress'
 		], scrambleKey);
 	}
 
 	/**
 	 * getVersion returns the version of the Sia app
-	 * 
+	 *
 	 * @returns {string} the current version of the Sia app.
 	 */
 	async getVersion() : Promise<string> {
@@ -41,28 +45,41 @@ export default class Sia {
 	}
 
 	/**
-	 * getStandardAddress returns the standard Sia address for the provided 
-	 * public key index. A standard address is defined as an address having 
-	 * 1 public key, requiring 1 signature, and no timelock.
+	 * verifyPublicKey returns the public key and standard Sia address for 
+	 * the provided public key index. The user will be asked to verify the 
+	 * public key on the display. A standard address is defined as an address 
+	 * having 1 public key, requiring 1 signature, and no timelock.
 	 * @param index {number} the index of the public key
-	 * @returns {string} the hex encoded Sia unlock hash
+	 * @returns {VerifyResponse} the public key and standard address
 	 */
-	async getStandardAddress(index: number) : Promise<string> {
-		const resp = await this.transport.send(0xe0, 0x02, 0x00, 0x00, uint32ToBuffer(index));
+	async verifyPublicKey(index: number) : Promise<VerifyResponse> {
+		const resp = await this.transport.send(0xe0, 0x02, 0x00, 0x01, uint32ToBuffer(index));
 
-		return decode(resp.slice(32));
+		// the status code is appended as the last 2 bytes of the response, but
+		// the transport already handles invalid codes.
+		return {
+			publicKey: `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			address: resp.slice(32, resp.length-2).toString()
+		};
 	}
 
 	/**
-	 * getPublicKey returns the public key at the provided index
-	 * 
-	 * @param index {number} the index of the public key to get.
-	 * @returns {string} the hex encoded public key.
+	 * verifyStandardAddress returns the public key and standard Sia address for 
+	 * the provided public key index. The user will be asked to verify the 
+	 * address on the display. A standard address is defined as an address 
+	 * having 1 public key, requiring 1 signature, and no timelock.
+	 * @param index {number} the index of the public key
+	 * @returns {VerifyResponse} the public key and standard address
 	 */
-	async getPublicKey(index: number) : Promise<string> {
-		const resp = await this.transport.send(0xe0, 0x02, 0x00, 0x01, uint32ToBuffer(index));
+	async verifyStandardAddress(index: number) : Promise<VerifyResponse> {
+		const resp = await this.transport.send(0xe0, 0x02, 0x00, 0x00, uint32ToBuffer(index));
 
-		return `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`;
+		// the status code is appended as the last 2 bytes of the response, but
+		// the transport already handles invalid codes.
+		return {
+			publicKey: `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			address: resp.slice(32, resp.length-2).toString()
+		};
 	}
 
 	/**
@@ -92,11 +109,14 @@ export default class Sia {
 				Buffer.from(buf.subarray(i, i + 255)));
 		}
 
-		return encode(resp);
+		console.log(resp);
+		console.log(resp.length);
+
+		return encode(resp.slice(0, resp.length -2));
 	}
 
 	/**
-	 * signTransaction signs the transaction with the provided key 
+	 * signTransaction signs the transaction with the provided key
 	 * @param encodedTxn {Buffer} a sia encoded transaction
 	 * @param sigIndex {number} the index of the signature to sign
 	 * @param keyIndex {number} the index of the key to sign with
