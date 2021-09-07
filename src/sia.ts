@@ -22,8 +22,8 @@ export default class Sia {
 	constructor(transport: Transport, scrambleKey = 'Sia') {
 		this.transport = transport;
 		transport.decorateAppAPIMethods(this, [
-			'getAddress',
 			'getPublicKey',
+			'getStandardAddress',
 			'signTransactionV044',
 			'signTransaction'
 		], scrambleKey);
