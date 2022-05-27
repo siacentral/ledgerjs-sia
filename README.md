@@ -20,14 +20,18 @@ import TransportWebHID from '@ledgerhq/hw-transport-webhid';
  * and returns the first Sia address of the ledger wallet.
  */
 async function connect() {
+	let sia;
 	try {
-		const transport = await TransportWebHID.create(),
-			sia = new Sia(transport),
-			address = await sia.getAddress(0);
-
+		const transport = await TransportWebHID.create();
+		sia = new Sia(transport);
+		
+		const address = await sia.getAddress(0);
 		console.log(address);
 	} catch (ex) {
 		// TODO: handle error
+	} finally {
+		// always close the transport when done.
+		if (sia) sia.close();
 	}
 }
 
