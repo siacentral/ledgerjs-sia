@@ -28,6 +28,7 @@ export default class Sia {
 		transport.decorateAppAPIMethods(this, [
 			'signTransactionV044',
 			'signTransaction',
+			'signV2Transaction',
 			'verifyPublicKey',
 			'verifyStandardAddress'
 		], scrambleKey);
@@ -102,6 +103,7 @@ export default class Sia {
 		buf.set(encodedTxn, 6);
 
 		for (let i = 0; i < buf.length; i += 255) {
+			// INS_GET_TXN_HASH = 0x08
 			resp = await this.transport.send(0xe0,
 				0x08,
 				i === 0 ? 0x00 : 0x80,
@@ -136,8 +138,41 @@ export default class Sia {
 		buf.set(encodedTxn, 10);
 
 		for (let i = 0; i < buf.length; i += 255) {
+			// INS_GET_TXN_HASH = 0x08
 			resp = await this.transport.send(0xe0,
 				0x08,
+				i === 0 ? 0x00 : 0x80,
+				0x01,
+				Buffer.from(buf.subarray(i, i + 255)));
+		}
+
+		return encode(resp);
+	}
+
+	/**
+	 * signV2Transaction signs the v2 transaction with the provided key
+	 * @param encodedTxn {Buffer} a sia encoded (V2TransactionSemantics) v2 transaction
+	 * @param sigIndex {number} the index of the signature to sign
+	 * @param keyIndex {number} the index of the key to sign with
+	 * @param changeIndex {number} the index of the key used for the change output
+	 * @returns {string} the base64 encoded signature
+	 */
+	async signV2Transaction(encodedTxn: Buffer, sigIndex: number, keyIndex: number, changeIndex: number) : Promise<string> {
+		const buf = Buffer.alloc(encodedTxn.length + 10);
+		let resp = Buffer.alloc(0);
+
+		if (encodedTxn.length === 0)
+			throw new Error('empty transaction');
+
+		buf.writeUInt32LE(keyIndex, 0);
+		buf.writeUInt16LE(sigIndex, 4);
+		buf.writeUInt32LE(changeIndex, 6);
+		buf.set(encodedTxn, 10);
+
+		for (let i = 0; i < buf.length; i += 255) {
+			// INS_GET_V2TXN_HASH = 0x10
+			resp = await this.transport.send(0xe0,
+				0x10,
 				i === 0 ? 0x00 : 0x80,
 				0x01,
 				Buffer.from(buf.subarray(i, i + 255)));
