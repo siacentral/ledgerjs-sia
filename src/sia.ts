@@ -21,6 +21,7 @@ interface VerifyResponse {
  * const sia = new Sia(transport)
  */
 export default class Sia {
+	v2: bool;
 	transport: Transport;
 
 	constructor(transport: Transport, scrambleKey = 'Sia', v2 = false) {
