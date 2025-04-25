@@ -21,11 +21,9 @@ interface VerifyResponse {
  * const sia = new Sia(transport)
  */
 export default class Sia {
-	v2: bool;
 	transport: Transport;
 
-	constructor(transport: Transport, scrambleKey = 'Sia', v2 = false) {
-		this.v2 = v2;
+	constructor(transport: Transport, scrambleKey = 'Sia') {
 		this.transport = transport;
 		transport.decorateAppAPIMethods(this, [
 			'signTransactionV044',
@@ -160,10 +158,6 @@ export default class Sia {
 	 * @returns {string} the base64 encoded signature
 	 */
 	async signV2Transaction(encodedTxn: Buffer, sigIndex: number, keyIndex: number, changeIndex: number) : Promise<string> {
-		if (!this.v2) {
-			throw new Error("v2 signing not enabled");
-		}
-
 		const buf = Buffer.alloc(encodedTxn.length + 10);
 		let resp = Buffer.alloc(0);
 
