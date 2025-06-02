@@ -30,7 +30,8 @@ export default class Sia {
 			'signTransaction',
 			'signV2Transaction',
 			'verifyPublicKey',
-			'verifyStandardAddress'
+			'verifyStandardAddress',
+			'signHash',
 		], scrambleKey);
 	}
 
@@ -178,6 +179,23 @@ export default class Sia {
 				Buffer.from(buf.subarray(i, i + 255)));
 		}
 
+		return encode(resp);
+	}
+
+	async blindSign(sigHash: Buffer, keyIndex: number) : Promise<string> {
+		const buf = Buffer.alloc(sigHash.length + 4);
+		let resp = Buffer.alloc(0);
+
+		buf.set(sigHash, 0);
+		buf.writeUInt32LE(keyIndex, sigHash.length);
+		for (let i = 0; i < buf.length; i += 255) {
+			// INS_SIGN_HASH = 0x04
+			resp = await this.transport.send(0xe0,
+				0x04,
+				0x00,
+				0x00,
+				Buffer.from(buf.subarray(i, i + 255)));
+		}
 		return encode(resp);
 	}
 
