@@ -188,14 +188,11 @@ export default class Sia {
 
 		buf.set(sigHash, 0);
 		buf.writeUInt32LE(keyIndex, sigHash.length);
-		for (let i = 0; i < buf.length; i += 255) {
-			// INS_SIGN_HASH = 0x04
-			resp = await this.transport.send(0xe0,
+		resp = await this.transport.send(0xe0,
 				0x04,
 				0x00,
 				0x00,
-				Buffer.from(buf.subarray(i, i + 255)));
-		}
+				buf);
 		return encode(resp);
 	}
 
