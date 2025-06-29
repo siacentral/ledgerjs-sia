@@ -186,8 +186,8 @@ export default class Sia {
 		const buf = Buffer.alloc(sigHash.length + 4);
 		let resp = Buffer.alloc(0);
 
-		buf.set(sigHash, 0);
-		buf.writeUInt32LE(keyIndex, sigHash.length);
+		buf.writeUInt32LE(keyIndex);
+		buf.set(sigHash, 4);
 		resp = await this.transport.send(0xe0,
 				0x04,
 				0x00,
