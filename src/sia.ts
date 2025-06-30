@@ -8,10 +8,6 @@ function uint32ToBuffer(val: number): Buffer {
 	return buf;
 }
 
-export function hex(b: Buffer) : string {
-	return b.reduce((v, byte) => v + byte.toString(16).padStart(2, '0'), '').toLowerCase();
-}
-
 interface VerifyResponse {
 	address: string;
 	publicKey: string;
@@ -64,8 +60,8 @@ export default class Sia {
 		// the status code is appended as the last 2 bytes of the response, but
 		// the transport already handles invalid codes.
 		return {
-			publicKey: `ed25519:${hex(resp.subarray(0, 32))}`,
-			address: hex(resp.subarray(32, resp.length-2))
+			publicKey: `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			address: resp.slice(32, resp.length-2).toString()
 		};
 	}
 
@@ -83,8 +79,8 @@ export default class Sia {
 		// the status code is appended as the last 2 bytes of the response, but
 		// the transport already handles invalid codes.
 		return {
-			publicKey: `ed25519:${hex(resp.subarray(0, 32))}`,
-			address: hex(resp.subarray(32, resp.length-2))
+			publicKey: `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			address: resp.slice(32, resp.length-2).toString()
 		};
 	}
 
@@ -119,7 +115,7 @@ export default class Sia {
 		console.log(resp);
 		console.log(resp.length);
 
-		return encode(resp.subarray(0, resp.length-2)); // remove the status code
+		return encode(resp.slice(0, resp.length -2));
 	}
 
 	/**
@@ -183,7 +179,7 @@ export default class Sia {
 				Buffer.from(buf.subarray(i, i + 255)));
 		}
 
-		return hex(resp);
+		return resp.reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '');
 	}
 
 	async blindSign(sigHash: Buffer, keyIndex: number) : Promise<string> {
@@ -197,7 +193,7 @@ export default class Sia {
 				0x00,
 				0x00,
 				buf);
-		return hex(resp.subarray(0, resp.length-2));
+		return resp.slice(0, resp.length-2).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '');
 	}
 
 	close() : Promise<void> {
