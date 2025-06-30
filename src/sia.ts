@@ -8,10 +8,6 @@ function uint32ToBuffer(val: number): Buffer {
 	return buf;
 }
 
-export function hex(b: Buffer) : string {
-	return b.reduce((v, byte) => v + byte.toString(16).padStart(2, '0'), '');
-}
-
 interface VerifyResponse {
 	address: string;
 	publicKey: string;
@@ -64,7 +60,7 @@ export default class Sia {
 		// the status code is appended as the last 2 bytes of the response, but
 		// the transport already handles invalid codes.
 		return {
-			publicKey: `ed25519:${resp.subarray(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			publicKey: `ed25519:${resp.subarray(0, 32).toString('hex')}`,
 			address: resp.subarray(32, -2).toString()
 		};
 	}
@@ -83,7 +79,7 @@ export default class Sia {
 		// the status code is appended as the last 2 bytes of the response, but
 		// the transport already handles invalid codes.
 		return {
-			publicKey: `ed25519:${resp.subarray(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			publicKey: `ed25519:${resp.subarray(0, 32).toString('hex')}`,
 			address: resp.subarray(32, -2).toString()
 		};
 	}
@@ -197,7 +193,7 @@ export default class Sia {
 				0x00,
 				0x00,
 				buf);
-		return hex(resp.subarray(0, -2));
+		return resp.subarray(0, -2).toString('hex');
 	}
 
 	close() : Promise<void> {
