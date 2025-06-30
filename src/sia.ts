@@ -64,8 +64,8 @@ export default class Sia {
 		// the status code is appended as the last 2 bytes of the response, but
 		// the transport already handles invalid codes.
 		return {
-			publicKey: `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
-			address: resp.slice(32, resp.length-2).toString()
+			publicKey: `ed25519:${resp.subarray(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			address: resp.subarray(32, -2).toString()
 		};
 	}
 
@@ -83,8 +83,8 @@ export default class Sia {
 		// the status code is appended as the last 2 bytes of the response, but
 		// the transport already handles invalid codes.
 		return {
-			publicKey: `ed25519:${resp.slice(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
-			address: resp.slice(32, resp.length-2).toString()
+			publicKey: `ed25519:${resp.subarray(0, 32).reduce((v, b) => v + ('0' + b.toString(16)).slice(-2), '')}`,
+			address: resp.subarray(32, -2).toString()
 		};
 	}
 
@@ -119,7 +119,7 @@ export default class Sia {
 		console.log(resp);
 		console.log(resp.length);
 
-		return encode(resp.slice(0, resp.length -2));
+		return encode(resp.subarray(0, -2)); // remove the status code
 	}
 
 	/**
@@ -197,7 +197,7 @@ export default class Sia {
 				0x00,
 				0x00,
 				buf);
-		return hex(resp);
+		return hex(resp.subarray(0, -2));
 	}
 
 	close() : Promise<void> {
