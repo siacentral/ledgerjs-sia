@@ -8,6 +8,10 @@ function uint32ToBuffer(val: number): Buffer {
 	return buf;
 }
 
+export function hex(b: Buffer) : string {
+	return b.reduce((v, byte) => v + byte.toString(16).padStart(2, '0'), '');
+}
+
 interface VerifyResponse {
 	address: string;
 	publicKey: string;
@@ -193,7 +197,7 @@ export default class Sia {
 				0x00,
 				0x00,
 				buf);
-		return encode(resp);
+		return hex(resp);
 	}
 
 	close() : Promise<void> {
