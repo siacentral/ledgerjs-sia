@@ -65,7 +65,7 @@ export default class Sia {
 		// the transport already handles invalid codes.
 		return {
 			publicKey: `ed25519:${hex(resp.subarray(0, 32))}`,
-			address: resp.subarray(32, resp.length-2).toString()
+			address: hex(resp.subarray(32, resp.length-2))
 		};
 	}
 
@@ -84,7 +84,7 @@ export default class Sia {
 		// the transport already handles invalid codes.
 		return {
 			publicKey: `ed25519:${hex(resp.subarray(0, 32))}`,
-			address: resp.subarray(32, resp.length-2).toString()
+			address: hex(resp.subarray(32, resp.length-2))
 		};
 	}
 
