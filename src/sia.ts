@@ -9,7 +9,7 @@ function uint32ToBuffer(val: number): Buffer {
 }
 
 export function hex(b: Buffer) : string {
-	return b.reduce((v, byte) => v + byte.toString(16).padStart(2, '0'), '');
+	return b.reduce((v, byte) => v + byte.toString(16).padStart(2, '0'), '').toLowerCase();
 }
 
 interface VerifyResponse {
@@ -65,7 +65,7 @@ export default class Sia {
 		// the transport already handles invalid codes.
 		return {
 			publicKey: `ed25519:${hex(resp.subarray(0, 32))}`,
-			address: hex(resp.subarray(32, -2))
+			address: resp.subarray(32, resp.length-2).toString()
 		};
 	}
 
@@ -84,7 +84,7 @@ export default class Sia {
 		// the transport already handles invalid codes.
 		return {
 			publicKey: `ed25519:${hex(resp.subarray(0, 32))}`,
-			address: hex(resp.subarray(32, -2))
+			address: resp.subarray(32, resp.length-2).toString()
 		};
 	}
 
@@ -119,7 +119,7 @@ export default class Sia {
 		console.log(resp);
 		console.log(resp.length);
 
-		return encode(resp.subarray(0, -2)); // remove the status code
+		return encode(resp.subarray(0, resp.length-2)); // remove the status code
 	}
 
 	/**
@@ -197,7 +197,7 @@ export default class Sia {
 				0x00,
 				0x00,
 				buf);
-		return hex(resp.subarray(0, -2));
+		return hex(resp.subarray(0, resp.length-2));
 	}
 
 	close() : Promise<void> {
