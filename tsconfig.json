@@ -4,17 +4,21 @@
 		"declarationMap": true,
 		"sourceMap": true,
 		"strict": true,
+		"isolatedModules": true,
 		"noImplicitAny": true,
 		"noImplicitThis": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"moduleResolution": "node",
-		"downlevelIteration": true,
+		"target": "es2020",
+		"module": "node16",
+		"moduleResolution": "node16",
+		"rootDir": "src",
 		"outDir": "lib",
 		"lib": [
-			"es6"
+			"es2020",
+			"dom"
 		]
 	},
 	"include": [
