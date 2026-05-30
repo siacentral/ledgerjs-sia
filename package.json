@@ -1,59 +1,59 @@
 {
-	"name": "@siacentral/ledgerjs-sia",
-	"version": "1.2.9",
-	"description": "Ledger hardware wallet Siacoin API.",
-	"main": "lib/sia.js",
-	"types": "lib/sia.d.ts",
-	"scripts": {
-		"build": "tsc",
-		"test": "jest",
-		"lint": "eslint src",
-		"prepare": "npm run build",
-		"prepublishOnly": "npm run lint && npm run test",
-		"preversion": "npm run lint"
-	},
-	"keywords": [
-		"Ledger",
-		"LedgerWallet",
-		"sc",
-		"Siacoin",
-		"sf",
-		"Siafund",
-		"NanoS",
-		"NanoX",
-		"Hardware Wallet"
-	],
-	"author": "Nate Maninger <me@n8m.us>",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/siacentral/ledgerjs-sia"
-	},
-	"bugs": {
-		"url": "https://github.com/siacentral/ledgerjs-sia/issues"
-	},
-	"homepage": "https://github.com/siacentral/ledgerjs-sia",
-	"publishConfig": {
-		"access": "public"
-	},
-	"devDependencies": {
-		"@eslint/js": "^10.0.1",
-		"@ledgerhq/hw-transport-mocker": "^6.34.2",
-		"@types/jest": "^30.0.0",
-		"eslint": "^10.4.1",
-		"jest": "^30.4.2",
-		"ts-jest": "^29.4.11",
-		"ts-node": "^10.9.2",
-		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.60.0"
-	},
-	"dependencies": {
-		"@ledgerhq/hw-transport": "^6.35.2",
-		"@ledgerhq/hw-transport-web-ble": "^6.34.2",
-		"@ledgerhq/hw-transport-webhid": "^6.35.2",
-		"buffer": "^6.0.3"
-	},
-	"files": [
-		"lib/**/*"
-	]
+  "name": "@siacentral/ledgerjs-sia",
+  "version": "2.0.0",
+  "description": "Ledger hardware wallet Siacoin API.",
+  "main": "lib/sia.js",
+  "types": "lib/sia.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint && npm run test",
+    "preversion": "npm run lint"
+  },
+  "keywords": [
+    "Ledger",
+    "LedgerWallet",
+    "sc",
+    "Siacoin",
+    "sf",
+    "Siafund",
+    "NanoS",
+    "NanoX",
+    "Hardware Wallet"
+  ],
+  "author": "Nate Maninger <me@n8m.us>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siacentral/ledgerjs-sia"
+  },
+  "bugs": {
+    "url": "https://github.com/siacentral/ledgerjs-sia/issues"
+  },
+  "homepage": "https://github.com/siacentral/ledgerjs-sia",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@ledgerhq/hw-transport-mocker": "^6.34.2",
+    "@types/jest": "^30.0.0",
+    "eslint": "^10.4.1",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.0"
+  },
+  "dependencies": {
+    "@ledgerhq/hw-transport": "^6.35.2",
+    "@ledgerhq/hw-transport-web-ble": "^6.34.2",
+    "@ledgerhq/hw-transport-webhid": "^6.35.2",
+    "buffer": "^6.0.3"
+  },
+  "files": [
+    "lib/**/*"
+  ]
 }
