@@ -17,7 +17,7 @@
 		"rootDir": "src",
 		"outDir": "lib",
 		"lib": [
-			"es2020",
+			"es2022",
 			"dom"
 		]
 	},
